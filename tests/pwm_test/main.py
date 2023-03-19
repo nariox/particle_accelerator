@@ -21,7 +21,7 @@ last_pulse_time = time.ticks_ms()
 # Create hardware timer
 tim = machine.Timer(1)
 # Configure PWM
-pwm_frequency = 10 # Hz
+pwm_frequency = 1000 # Hz
 # Create an instance of the PWM object
 pwm = machine.PWM(out_pin, freq=pwm_frequency, duty=0)
 # Configure minimum time between pulses
@@ -30,14 +30,14 @@ max_pulse_interval = 10 # ms
 
 # To be called when the timer triggers
 def timer_callback(timer):
-    #print("Timer Callback")
+    print("Timer Callback")
     pwm.duty(0)
 
 
 while True:
     # Read the ADC value
     adc_value = adc.read()
-    #print(adc_value)
+    print(adc_value)
 
     # Check if the ADC value is below the threshold
     if adc_value < ADC_THRESHOLD:
@@ -52,9 +52,9 @@ while True:
 
         # Check if we have waited long enough to trigger another pulse
         if elapsed_time >= max_pulse_interval:
-            #print("Pulsing! ADC:", adc_value, "Elapsed:", elapsed_time, "Consecutive:", consecutive_below_threshold)
+            print("Pulsing! ADC:", adc_value, "Elapsed:", elapsed_time, "Consecutive:", consecutive_below_threshold)
             # Turn on the output pin PWM signal
-            pwm.duty(5)
+            pwm.duty(150)
         
             # Set the timer to trigger after the pulse duration and call the timer_callback function
             # This will turn off the PWM signal on this coil after PULSE_DURATION ms
