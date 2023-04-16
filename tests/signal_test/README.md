@@ -1,0 +1,1 @@
+A simple program which reads its current ADC value, printing it to serial. Also shortly pulses the corresponding coil, then moves to the next pair 5 seconds later. Useful for checking continuity and ensuring that coil-sensor pairs are correct.  
