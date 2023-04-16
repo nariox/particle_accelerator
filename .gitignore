@@ -1,0 +1,2 @@
+tests/rotary_encoder/rotary.py
+tests/rotary_encoder/rotary_irq_esp.py
