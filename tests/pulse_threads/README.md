@@ -1,0 +1,1 @@
+This is a simple triggering method that triggers a single pulse on a coil when the ADC value for a given sensor goes beneath a value. For simplicity, this version is synchronise. Pulses are only alowed to occur every MIN_PULSE_INTERVAL and last for PULSE_DURATION.
