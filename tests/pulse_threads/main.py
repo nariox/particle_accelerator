@@ -49,14 +49,15 @@ def poll_sensors():
         adc_values = [ADC_PINS[i].read() < ADC_THRESHOLDS[i] for i in range(len(ADC_PINS))]
 
         # Handle if any sensors detected the ball
-        for i in [i for i, e in enumerate(adc_values) if e==True]
+        for i in [i for i, e in enumerate(adc_values) if e==True]:
             CURRENT_COIL = i
-            CURRENT_PERIOD = time.ticks_diff(time.ticks_ms(), last_pulse_times)
+            CURRENT_PERIOD = time.ticks_diff(time.ticks_ms(), last_pulse_time)
             # If the ball is going slowly, trigger the current coil
-            if  CURRENT_PERIOD > MAX_PULSE_INTERVAL:
-                t = threading.Thread(target=pulse_pin, kwargs={'pulse_pin': i})
+            if  CURRENT_PERIOD > MAX_PULSE_INTERVAL
+                #t = _thread.start_new_thread(pulse_pin, (i))
+                #TIMERS[i].init(period=0, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(i))
                 print("Pulsing coil", i+1)
-                last_pulse_times = time.ticks_ms()
+                last_pulse_time = time.ticks_ms()
             # If the ball is going too fast (or lots of noise is present), do nothing
             elif CURRENT_PERIOD < MIN_PULSE_INTERVAL:
                 print("Going too fast, can't keep up. Ball detected at coil", i+1)
@@ -64,8 +65,10 @@ def poll_sensors():
             else:
                 offset = CURRENT_PERIOD*SPEED_SCALE - PULSE_ANTICIPATION
                 nexti = (i+1) % len(ADC_PINS);
-                TIMERS[nexti].init(period=offset, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(nexti))
-                last_pulse_times = time.ticks_ms()+offset
+#                TIMERS[nexti].init(period=offset, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(nexti))
+                last_pulse_time = time.ticks_ms()+offset
                 print("Preparing to pulse coil", nexti)
 
+print("I am testing")
 poll_sensors()
+print("Done testing")
