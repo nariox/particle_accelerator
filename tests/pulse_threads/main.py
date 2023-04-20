@@ -14,8 +14,8 @@ PULSE_DURATION = 5 # ms
 MIN_PULSE_INTERVAL = 30 # ms
 MAX_PULSE_INTERVAL = 100 # ms
 # Acceleration values
-PULSE_ANTICIPATION = 10 # ms
-SPEED_SCALE = 1 # Unitless
+PULSE_ANTICIPATION = 30 # ms
+SPEED_SCALE = 0.8 # Unitless
 
 # Global Variables
 CURRENT_PERIOD = 0 # Ticks us until sensor
@@ -67,7 +67,7 @@ def poll_sensors():
                     TIMERS[i].init(period=0, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(i))
                     at_speed=1
 
-                offset = CURRENT_PERIOD*SPEED_SCALE - PULSE_ANTICIPATION
+                offset = int(CURRENT_PERIOD*SPEED_SCALE - PULSE_ANTICIPATION)
                 nexti = (i+1) % len(ADC_PINS)
                 TIMERS[nexti].init(period=offset, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(nexti))
                 last_pulse_time = time.ticks_ms()+offset
