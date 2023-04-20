@@ -9,13 +9,13 @@ OUT_PINS = [machine.Pin(23, machine.Pin.OUT), machine.Pin(17, machine.Pin.OUT), 
 # Define the threshold values for the ADCs
 ADC_THRESHOLDS = [4000, 4000, 4000, 4000]
 # Define the duration of the output pulse in milliseconds
-PULSE_DURATION = 5 # ms
+PULSE_DURATION = 20 # ms
 # Define the minimum interval between pulses in milliseconds
 MIN_PULSE_INTERVAL = 30 # ms
 MAX_PULSE_INTERVAL = 100 # ms
 # Acceleration values
-PULSE_ANTICIPATION = 30 # ms
-SPEED_SCALE = 0.8 # Unitless
+PULSE_ANTICIPATION = 10 # ms
+SPEED_SCALE = 1.0 # Unitless
 
 # Global Variables
 CURRENT_PERIOD = 0 # Ticks us until sensor
@@ -51,6 +51,9 @@ def poll_sensors():
         for i in [i for i, e in enumerate(adc_values) if e is True]:
             CURRENT_COIL = i
             CURRENT_PERIOD = time.ticks_diff(time.ticks_ms(), last_pulse_time)
+            offset = int(CURRENT_PERIOD*SPEED_SCALE - PULSE_ANTICIPATION)
+            print("Current period", CURRENT_PERIOD)
+            print("Predicted offset", offset)
             # If the ball is going slowly, trigger the current coil
             if  CURRENT_PERIOD > MAX_PULSE_INTERVAL:
                 #t = _thread.start_new_thread(pulse_pin, (i))
@@ -67,11 +70,10 @@ def poll_sensors():
                     TIMERS[i].init(period=0, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(i))
                     at_speed=1
 
-                offset = int(CURRENT_PERIOD*SPEED_SCALE - PULSE_ANTICIPATION)
                 nexti = (i+1) % len(ADC_PINS)
                 TIMERS[nexti].init(period=offset, mode=machine.Timer.ONE_SHOT, callback=lambda t: pulse_pin(nexti))
                 last_pulse_time = time.ticks_ms()+offset
-                print("Preparing to pulse coil", nexti)
+                print("Preparing to pulse coil", nexti+1)
 
 print("I am testing")
 poll_sensors()
